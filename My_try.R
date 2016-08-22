@@ -1134,7 +1134,90 @@ boxcox(modelxy2)
 
 # MEGA LÆKKERT!
 
+detach(hydrolysis)
+
 # 7.4 ESTIMATION OF CONTRAST -----------------------------------------------------------------------------------------------
+
+load("hydrolysis.rda")
+
+attach(hydrolysis)
+
+# Vi så i 7.1.1 hvordan vi kunne skifte ref. cat. med relevel.
+# I tilfældet med med cat. var. 'feed' skal vi så lave fire moddeler da der er 5 cat.
+# Vi kan dog også bruge funktionen 'estimable' fra pakker 'gmodels'.
+
+library(gmodels)
+
+# Først laver vi en model uden med ref. cat.
+# (Og stadig med y = log(serine))
+
+model3a <- lm(log10(serine)~feed + hour)
+
+summary(model3a)
+
+# For en bedre foklaring af hvad der her sker, se s. 87. se evt '?estimable'
+# Men: 0 og 1'erne korrespondere til de cat du gerne vil undersøge.
+# rbind (row bind) konsturer en matirx som vi kalder 'contr'
+# Disse sætter vi ind i estimable funktionen og ber' om et conf. int. på 0.95
+
+contr <- rbind('fish-mais' = c(0,-1,1,0,0,0))
+estimable(model3a, contr, conf.int = 0.95)
+
+# Virker fint og med p<0 går jeg ud fra at jeg kan forkaste nul-hypotesen (??)
+
+# Vi kan også undersøge forskellen på 'barley' og 'meat' i den 16'ne time således:
+
+barley.est <- c(1,0,0,0,0,16)
+meat.est <- c(0,0,0,1,0,16)
+est <- rbind(barley.est, meat.est)
+estimable(model3a, est, conf.int = 0.95)
+
+# Kikker vi på conf. int. tyder det på at vi faktisk her tester for nulhypotese mellem de to...
+# Bogen siger nu noget med en log-transformation - jeg går ud fra det er logserine
+# og bekymre mig ikke mere herom...
+
+# Prøver lige noget:
+
+fish.est <- c(0,1,0,0,0,0)
+mais.est <- c(0,0,1,0,0,0)
+soy.est <- c(0,0,0,0,1,0)
+est <- rbind(barley.est, fish.est, mais.est, meat.est, soy.est)
+estimable(model3a, est, conf.int = 0.95)
+
+# Du får i hvet fald conf. int. der tyder på at du kan forkaste nul-hypotesen
+# mellem hver cat. men er stadig ikke sikker på du kan tolke p-værdien således...
+
+# Adjustet Means With 'estimable'
+# Adjusted means el. least squares mean el. bare LS-means..
+
+# Er ikke sikker på hvad det her kan så vender tilbage til det når 
+# det bliver nødvedigt. dvs. springer s. 89 over..
+
+#*************************************** 8) Models With Random Effects ***********************************
+
+# 8.1 F-TEST AND LIKELIHOOD RATIO TEST ------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
