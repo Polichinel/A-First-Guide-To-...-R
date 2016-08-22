@@ -790,7 +790,7 @@ dmultinom(c(70, 33, 6, 33), size = 142, prob = c(0.49, 0.23, 0.04, 0.23))
 
 #*************************************** 7) Linear Normal Models ***********************************
 
-# 7.1.1 ONE-WAY ANOVA ------------------------------------------------------------------------------
+# 7.1.1 ONE-WAY ANOVA ---------------------------------------------------------------------------------------------------
 # Har er alle x factore
 
 load("chlorophyll.rda")
@@ -867,7 +867,7 @@ summary(model1c)
 
 # Samme resultat.. Ved ikke hvad jeg lige synes er hottest..
 
-# 7.1.2 TWO-WAY ANOVA. MULTI-WAY ANOVA. -----------------------------------------------------------------------
+# 7.1.2 TWO-WAY ANOVA. MULTI-WAY ANOVA. ----------------------------------------------------------------------------------
 # Interaktion (!!)
 
 load("organic.rda")
@@ -952,7 +952,7 @@ model2 <- lm(y~1)
 anova(model2, model1)
 # Kan godt lide ideen om at sammenligne modeller, men skal lige fatte det helt.
 
-# 7.2.2 MULTIPLE LINEAR REGRESSION ---------------------------------------------------------------
+# 7.2.2 MULTIPLE LINEAR REGRESSION -----------------------------------------------------------------------------------------
 
 # Vi indsætter flere x blot ved '+'. (eget) eks:
 
@@ -998,7 +998,7 @@ anova(model2,model3)
 summary(model3)
 # Her ser vi jo også at leddet som sig, om end mindre end d2.. nok om det.
 
-# 7.2.3 TEST FOR LINEARITY --------------------------------------------------------------------------
+# 7.2.3 TEST FOR LINEARITY -----------------------------------------------------------------------------------------------
 
 # VI bruger her datasættet 'hydrolysis':
 
@@ -1052,6 +1052,90 @@ summary(model3a)
 
 detach(hydrolysis)
 
-# 7.3 MODEL VALIDATION -----------------------------------------------------------------------------
+# 7.3 MODEL VALIDATION ------------------------------------------------------------------------------------------------
 
+load("hydrolysis.rda")
 attach(hydrolysis)
+
+# Vi konstruere model3 fra før.
+
+logserine <- log10(serine)
+
+model3 <- lm(logserine~feed+hour)
+
+model3a <- lm(logserine~feed+hour-1) #Uden ref. cat.
+
+summary(model3)
+summary(model3a) # Bare for sjov og øvelse :)
+
+# 7.3.1 ANALYSIS OF RESIDUALS (Normalfordelte fejlled og Heteroskedasticitet)---------------------------------------------
+
+pred3 <- predict(model3) # Predicted values
+res3 <- residuals(model3) # Raw residuals
+sres3 <- rstandard(model3) # Standardized residuals
+
+# Disse objekter kan nu bruges til residual plots ('plot()') og QQ-plots ('qqnorm()') 
+
+plot(pred3, res3) # TJEKKER FOR VARIANSHOMOGENITET/HETEROSKEDASTICITET 
+abline(h=0) # Giver en horisontal linje til sammenligning
+
+plot(pred3, sres3) # TJEKKER FOR VARIANSHOMOGENITET/HETEROSKEDASTICITET 
+abline(h=0) # Giver en horisontal linje til sammenligning
+
+qqnorm(sres3) # TJEKKER FOR NORMALFORDELTE FEJLLED
+abline(a=0,b=1) # GIver dig en 45* linje at sammenligne med
+
+# Her ser alt godt ud; Residualerne falder fint omkring 0
+# Og i QQ-plottet ligger de fint på linjen
+
+# 7.3.2 TRANSFORMATION. BOX-COX ANALYSE -----------------------------------------------------------------------------------
+
+# Antag nu at der var problemer med model specifiketionenerne.
+# Vi konstruere nu ne model hvor 'serine' ikke er log. trans:
+
+model3.orig <- lm(serine~feed+hour)
+plot(predict(model3.orig), rstandard(model3.orig)) # On the fly..
+abline(h=0)
+# Vi ser at der er et problem med varianhomogeniteten
+# positive værdier i enderne, negative værider i midten.
+
+# Vi kan bruge 'boxcox()' til at undersøge hvilken model transformation der er passende
+# Først:
+
+library(MASS)
+
+boxcox(serine~feed+hour) 
+
+# Da den optimale værdi (midten) er meget tæt på λ = 0 er en log. trans den korrekte
+# Ved λ = 1 går ikke du fra en transformation er nødvendig
+# Ved λ = 2 tænker jeg at en kvadratisk transformation er på sin plads
+# Er dog ikke helt sikke.
+
+# Test for λ = 1
+
+y <- c(1,2,3,4,5,6,7,8,9)
+x <- c(2,4,6,8,10,12,14,16,18)
+
+modelxy <- lm(y~x)
+
+boxcox(modelxy)
+
+# Den optimale værdi lægger som forventet på λ = 1
+
+# Test for λ = 2
+
+x2 <- c(1,4,9,16,25,36,49,64,81)
+
+modelxy2 <- lm(y~x2)
+
+boxcox(modelxy2)
+
+# Den optimale værdi lægger som forventet på λ = 2
+
+# MEGA LÆKKERT!
+
+# 7.4 ESTIMATION OF CONTRAST -----------------------------------------------------------------------------------------------
+
+
+
+
