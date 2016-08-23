@@ -1318,11 +1318,37 @@ S <-factor(session)
 
 library(lme4)
 
+model1 <- lmer(y~P + (1|A)+(1|S)+(1|A:P)+(1|P:S)+(1|A:S), REML=TRUE)
+summary(model1)
+# Lidt anderledes ind i bogen, men alt er fint.
+
+# Da Variance=~0 for S og P:S laver vi en model uden disse.
+# Så sammenligner vi modeller, hvorfor vi igen bruger lm og ikke lme:
+
+model2 <- lmer(y~P+(1|A)+(1|A:P)+(1|A:S), REML = TRUE)
+
+model2.ML <- lmer(y~P+(1|A)+(1|A:P)+(1|A:S), REML = FALSE)
+model3.ML <- lmer(y~1+(1|A)+(1|A:P)+(1|A:S), REML = FALSE)
+
+anova(model3.ML,model2.ML)
+# Resultaterne er lidt anderlese, men ikke eget. Kommandoen også lidt anderledes men pyt.
+# Det vigtige er at vi ikke kan bekræfe nul-hypotesen, hvorfor vi bruger 'model2' (REML self.)
+
+summary(model2)
+
+# Without intercept:
+
+model2a <- lmer(y~P-1+(1|A)+(1|A:P)+(1|A:S), REML = TRUE)
+
+summary(model2a)
+
+# Det virker super smart det hele, men er stadig lidt presset af tolkningen..
+# Men det er i hverfald noget med at der ikke er nogle p-værdier så man må nøjes med t-dist.. se s. 100
 
 
+#****************************************** 9) Repeated Measurements ***********************************
 
-
-
+# 9.1.1 WIDE FORM AND LONG FORM (Preliminaries) --------------------------------------------------------------------------
 
 
 
