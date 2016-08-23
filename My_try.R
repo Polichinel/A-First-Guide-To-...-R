@@ -1195,7 +1195,68 @@ estimable(model3a, est, conf.int = 0.95)
 
 #*************************************** 8) Models With Random Effects ***********************************
 
-# 8.1 F-TEST AND LIKELIHOOD RATIO TEST ------------------------------------------------------------------------------------
+# 8.2 ANALYSIS OF MIXED LINEAR MODELS (lme, lmer) --------------------------------------------------------------------------
+
+# 8.2.1 Analysing a singel random factor
+
+# Vi bruger datasættet 'porkers' der omhandler mørheden af svinekød... (!)
+# Og pakken 'nlme'
+
+load("porkers.rda")
+library(nlme)
+str(porkers)
+
+model1 <- lme(tenderness~chilling+ph+ph:chilling, random =~ 1|porker, method = "REML", data = porkers)
+# Noter dig her at datasættet hedder 'porkers', man var. hedder 'porker'....
+
+# undersøger antagelrser:
+
+plot(model1)
+# Hvor er qq-plottet?
+
+summary(model1)
+
+# VI bruger ANOVA til at undersøge om moddelen med interaktion er bedre end den uden
+# (Nested model)
+# Husk her at bruge 'ML' og ikke 'REML'
+
+model1.ML <- lme(tenderness~chilling+ph+ph:chilling, random =~ 1|porker, method = "ML", data = porkers)
+model2.ML <- lme(tenderness~chilling+ph, random =~ 1|porker, method = "ML", data = porkers)
+
+anova(model1.ML,model2.ML)
+
+# Forskellen på 'loglik' er li' 'L.Ratio' hvilket holdt op i mod chi-square dist. og df giver p=0.66
+# Her ser det altså ikke ud til at interaktionen er nødvendig (vel?)
+
+# Vi gør vidre med 'model2.lm' og tjekker nu om 'chilling' gør en forskel:
+
+model3.ML <- lme(tenderness~ph, random =~ 1|porker, method = "ML", data = porkers)
+anova(model2.ML,model3.ML)
+
+# Da vi ikke kan forkaste nul-hypotesen går vi vidre med den mindste model (3)
+# Vi holder der nu op mod en model hvor vi kun tjekker for random foreskelle (4)
+
+model4.ML <- lme(tenderness~ 1, random =~ 1|porker, method = "ML", data = porkers)
+anova(model3.ML,model4.ML)
+
+# Da p < 0.05 okan du nu ikke bekræte null-hypotesen. Vi køre således vidre med 'model3.ML'
+
+# Computation of p- value with parametric bootstrap:
+# Vi ser på testen mellem 'model2.ML' og 'model3.ML'
+# Her simulere vi nu 1000 dataset fra nul-modellen (3)
+# og sammenligner den max. LR med den fra den virkelige data (2.319):
+
+sim <- simulate.lme(model3.ML, m2=model2.ML,nsim = 1000, method = "ML")
+lrsim <- 2*(sim$alt$ML - sim$null$ML)
+psim <- sum(lrsim>2.319)/1000
+psim
+
+# Således stiger vores p-værdi fra 0.1278 -> 0.13
+
+plot(model3.ML)
+
+
+
 
 
 
