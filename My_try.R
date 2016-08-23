@@ -1263,10 +1263,36 @@ summary(model3)
 
 # 8.2.2 TWO OR MORE RANDOM FACTORS ----------------------------------------------------------------------------------------
 
+# Vi bruger datafram 'vitE' (E vitamin i kød). Vi bruger kvadratroden af 'vitE' som respons (y). 
+# Ligeledes har vi var. 'lab' og 'sampel'. som skal være faktore:
 
+load("vitE.rda")
+library(nlme)
 
+# Her skal du være forsigtig med at 'attach'e. Du for en advarsel fordi både datasæt og var. hedder 'vitE'
+# Du prøver nogle ting, blandt andet 'rename' med pakken 'plyr'. det virker egenglig fint men, der er for meget ballad
+# Så du køre uden attach.
 
+vitE$sqrtEvit <- sqrt(vitE$vitE)
 
+L <- factor(vitE$lab)
+S <- factor(vitE$sample)
+
+# Poduktet af L og S (L:S="LS") er  dan random effekt.
+# I lme's random effekter kan vi ikke sætte et produkt in 'on the fly'. vi konstruere der herfor før.
+# Notér dig at LS er en subdivision af L. Dette gives ved L/LS  
+
+LS <- L:S
+model1 <- lme(sqrtEvit~S, random =~ 1|L/LS)
+
+# Og vi fitter modellen uden intercept (ref. cat.)
+
+model1a <- lme(sqrtEvit~S - 1, random =~ 1|L/LS)
+
+summary(model1a)
+
+# Er lidt i tvivl om tolkningen, men bogen siger jeg skal notere mig SD for L og L:S 
+# hvilke hendholdsvis er 0.245 og 0.134. Disse skal ses i forhold ti residualet på 0.6774 (?)
 
 
 
