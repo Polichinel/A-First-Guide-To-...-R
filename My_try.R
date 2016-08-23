@@ -1252,8 +1252,16 @@ psim <- sum(lrsim>2.319)/1000
 psim
 
 # Således stiger vores p-værdi fra 0.1278 -> 0.13
+# Vi benytter model3 som den færdige model, og køre den nu med "REML" 
+# (som giver mere præcise resultater end "ML" men åbenbart ikke fungerede før..)
 
-plot(model3.ML)
+model3 <- lme(tenderness~ph, random =~ 1|porker, method = "REML", data = porkers)
+summary(model3)
+
+# Lækkert. Vi kan udføre de samme krumspring som ved lm,
+# dvs. relevel, estimable osv.
+
+# 8.2.2 TWO OR MORE RANDOM FACTORS ----------------------------------------------------------------------------------------
 
 
 
