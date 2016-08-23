@@ -1294,6 +1294,35 @@ summary(model1a)
 # Er lidt i tvivl om tolkningen, men bogen siger jeg skal notere mig SD for L og L:S 
 # hvilke hendholdsvis er 0.245 og 0.134. Disse skal ses i forhold ti residualet på 0.6774 (?)
 
+# Generelt om lmer: 
+# lmer har nogle fordele og ulemper i forhold til lme.:
+# Random factors kan være non-nested
+# Der kan være mere end two random factors (det kan lme ogdå, men det er kompliceret..)
+# Dog fungere lmer ikke med 'simulate' eller 'estimable'.
+
+# Vi bruger nu dataframet 'chocolate'. (sweetness score)
+
+load("chocolate.rda")
+
+attach(chocolate)
+
+# Vi tranformere nogel var. (spørg ikke hvad der foregår ved y - de skriver 'stabilize'..?)
+
+y <- asin(sqrt(score/15))
+
+A <- factor(assessor)
+P <- factor(product)
+S <-factor(session)
+
+# Vi laver nu en model hvor P er fixed, og A,S,A*P,P*S OG A*S er random
+
+library(lme4)
+
+
+
+
+
+
 
 
 
