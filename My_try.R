@@ -1375,11 +1375,47 @@ head(long.g)
 # Noter dig at baseline 'w0' nu har sin egen var. Og det samme har 'time' og 'weight'. 
 # Data viser nu en obs. pr. obs (so to say.) 
 
+# 9.1.2 PROFILE PLOTS ------------------------------------------------------------------------------------------
 
+# Vi konstruere nogel plots.
+# Hendholdsvis pr. subjekt (ged) = 'subjekt profiles'. Giver os et billede af den typiske 'time respons'  
+# og pr. treatment (fodder) = 'average profiles'. Giver os et billede af forholdet mellem tid og treat.
 
+# SUBJECT PROFILES:
+# Her vil vi gerne havde baseline med, Hvorfor:
 
+long.gb <- reshape(goats, idvar="goat", 
+                  varying = list(3:7), # Vi har 3 (baseline) med.
+                  times=c(0,26,45,61,91), # Hvorfor det også afspejles her med 'times = 0'
+                  v.names="weight",
+                  direction = "long")
+library(lattice)
+? xyplot
 
+xyplot(weight~time|feed, groups = goat, 
+       xlab="Time (days)",
+       type="l",
+       data=long.gb)
 
+# AVERAGE TREATMENT PROFILES
+
+?with
+?tapply
+avedata <- with(long.gb,tapply(weight, list(time,feed), mean))
+avedata
+
+obsTimes <- c(0,26,45,61,91)
+
+plot(obsTimes, avedata[,1],
+     ylim = range(avedata),
+     xlab = "Time (days)",
+     ylab = "Weight (kg)",
+     type = "b")                           # Feed type 1
+
+for (i in 2:4) lines(obsTimes,avedata[,i],
+                     col=i,
+                     type = "b")          # Add feed type 2-4
+                     
 
 
 
