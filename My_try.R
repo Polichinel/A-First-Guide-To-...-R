@@ -1437,7 +1437,7 @@ summary(mRanInt)
 
 # Lækkert, men tolkningen tho... feed1 er ref cet...
 
-# 9.3 INVESTIGATION OF F THE CORRELATION STUCTURE ----------------------------------------------------------------
+# 9.4 INVESTIGATION OF F THE CORRELATION STUCTURE ----------------------------------------------------------------
 
 
 
