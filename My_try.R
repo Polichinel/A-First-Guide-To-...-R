@@ -1416,6 +1416,22 @@ for (i in 2:4) lines(obsTimes,avedata[,i],
                      col=i,
                      type = "b")          # Add feed type 2-4
                      
+# 9.2 ANALYSIS OF SUMMERY MEASURES ------------------------------------------------------------------------------
+
+# Vi kikker nu på vægt forøgelsen (incremental) fra day 26 til 91 og antager 'independent'.
+# Vi bruger 'lm' på 'wide' data'en
+
+mIncr <- lm(w91-w26~w0+factor(feed), data = goats)
+summary(mIncr)
+# Ref. cat. = treat 1. 
+# Og vi ser blandt andet at treat 4 giver en signifikant mindre vægtforøgning end trat.1
+
+# 9.3 THE RANDOM INTERCEPT MODEL --------------------------------------------------------------------------------
+
+
+
+
+
 
 
 
