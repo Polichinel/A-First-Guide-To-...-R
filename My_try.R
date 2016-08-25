@@ -1350,16 +1350,30 @@ summary(model2a)
 
 # 9.1.1 WIDE FORM AND LONG FORM (Preliminaries) --------------------------------------------------------------------------
 
+load("goats.rda")
+
+# Vi har 28 geder; 4 slags fodre og gedernes vægt målt over 5 gange (1 pre test ofc.).
+
+head(goats)
+
+# Det vi ser her kaldes "wide form": en linje pr. ged.
+# Vi skal dog bruge "long form". Dvs.: en linje pr. observeret vægt (post treatment)
+# Vi omformer data med 'reshape' kommandoen:
+
+? reshape
+long.g <- reshape(goats, idvar="goat", 
+                  varying = list(4:7), # Vi bruger var. 4-7: post treat vægtene 
+                  times=c(26,45,61,91), # Uge numrene
+                  v.names="weight", # Navne på variabler i 'long' korrosponderende med variablerne i 'wide'.
+                  direction = "long") # Går fra 'wide' til 'long'. 
 
 
+long.g <- long.g[order(long.g$goat),] # Sotere data efter ged...
 
+head(long.g)
 
-
-
-
-
-
-
+# Noter dig at baseline 'w0' nu har sin egen var. Og det samme har 'time' og 'weight'. 
+# Data viser nu en obs. pr. obs (so to say.) 
 
 
 
