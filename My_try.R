@@ -1427,12 +1427,17 @@ summary(mIncr)
 # Og vi ser blandt andet at treat 4 giver en signifikant mindre vægtforøgning end trat.1
 
 # 9.3 THE RANDOM INTERCEPT MODEL --------------------------------------------------------------------------------
+# Vi sætter nu 'ged' som randomfactor (bruger lme) og laver interaktione mellem 'feed' og 'time'
 
+library(nlme)
+?lme
 
+mRanInt <- lme(weight~w0+factor(feed)*factor(time), random =~1|goat, data = long.g)
+summary(mRanInt)
 
+# Lækkert, men tolkningen tho... feed1 er ref cet...
 
-
-
+# 9.3 INVESTIGATION OF F THE CORRELATION STUCTURE ----------------------------------------------------------------
 
 
 
