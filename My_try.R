@@ -1612,8 +1612,17 @@ plot(corFctGauseNugget, 0, 100,
 # Det ser fint ud - men der var også meget tryl i første kommando..
 
 # 9.5.5 COMPARISON OF DIFFERENT CORRELATIONS STRUKTURES ---------------------------------------------------------
+# Ofte sammenlignes forskellige modeller med 'AIC' (Akaike's Information Criterion)
+# ANOVA raportere 'AIC' såfremt vi indputter flere modeller:
 
+anova(mGausNugget,mGausNoNugget,mGausNoRi,mExpNugget,mExpNoNugget,mExpNoRi,mRanInt,mUnrestrict)
 
+# Her ser vi på hvilke modeller der har lavest 'AIC'
+# Umiddelbart ser 'mGausNoNugget', 'mExpNoRi' og 'mExpNoNugget' udtil at fungere bedst.
+# Samme konk. får vi hvis vi kikker på 'BIC' (Baysian Information Criterion).
+# p-værdierne skal man vist ikke (endnu) ligge for meget i.
+
+# 9.6 MODELS WITH VARIANCE INHOMOGENEITY
 
 
 
