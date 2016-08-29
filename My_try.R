@@ -1440,7 +1440,7 @@ summary(mRanInt)
 # 9.4 INVESTIGATION OF THE CORRELATION STUCTURE ----------------------------------------------------------------
 
 # Det her bliver lidt lang håret..
-# I 'random intercept models' (overstående) er det antaget at hver fodertype
+# I 'random intercept models' (overstående) er det antaget at hver fodertype (eller hver ged?)
 # har samme variance (correlation) på tværs af tid. Denne antagelse er sjældent rimlig.
 # Vi undersøger derfor variancen på tværs af tid manuelt:
 
@@ -1500,9 +1500,51 @@ pairs(lmFitRes)
 
 # 9.5 SERIAL CORRELATION AND VARIANCE HOMOGENEITY ----------------------------------------------------------------
 
+# Se s. 110 for en forklaring herom + skema over mugligheder.
 
+# 9.5.1 FITTING MODELS WITH SERIAL CORRELATION STUCTURE ----------------------------------------------------------
+# Først 'the Diggel model' (mGausNugget).
 
+mGausNugget <- lme(weight~w0+factor(feed)*factor(time),
+                   random =~ 1|goat,
+                   corr=corGaus(form =~ time|goat,nugget = TRUE), # Se nedestående
+                   data=long.g)
 
+# Random og fixed elementer er specificeret som sædvanligt.
+# 'corr=corGuas' specificere at correlationen svækkes som en 'Guassian density'
+# 'time' pecificere at tid er målt med variablen 'time'
+# Og 'nugget = TRUE' specificere at iid. fejl (målefejl?) er indkluderet.
 
+# Følgende er eks på de andre moddeler nævnt på s. 110-112:
+
+mGausNoNugget <- lme(weight~w0+factor(feed)*factor(time),
+                   random =~ 1|goat,
+                   corr=corGaus(form =~ time|goat,nugget = FALSE), # uden indragelsen af målefejl
+                   data=long.g)
+
+mExpNugget <- lme(weight~w0+factor(feed)*factor(time),
+                     random =~ 1|goat,
+                     corr=corExp(form =~ time|goat,nugget = TRUE), # Exponensiel frem for guassisk ændring
+                     data=long.g)
+
+mExpNoNugget <- lme(weight~w0+factor(feed)*factor(time),
+                  random =~ 1|goat,
+                  corr=corExp(form =~ time|goat,nugget = FALSE), # Exponensiel frem for guassisk + ingen måle fejl
+                  data=long.g)
+
+mUnrestrict <- lme(weight~w0+factor(feed)*factor(time),
+                    random =~ 1|goat,
+                    corr=corSymm(form =~ 1|goat), # Kan alle slags ændringer
+                    data=long.g)
+
+# Understående er modellerne uden 'random effects':
+
+mGausNoRi <- gls(weight~w0+factor(feed)*factor(time), # Notér dig 'gls' frem for 'lme'
+                 corr=corGaus(form =~ time|goat), # guassisk uden 'random effects'
+                 data=long.g)
+
+mExpNoRi <- gls(weight~w0+factor(feed)*factor(time), # Notér dig 'gls' frem for 'lme'
+                 corr=corExp(form =~ time|goat), # Eksponensiel uden 'random effects'
+                 data=long.g)
 
 
