@@ -1498,7 +1498,7 @@ plot(timeDist, corVec) # 'plot(x,y)'
 pairs(lmFitRes)
 # Fint. og kan også bruges til at identificere outliers.
 
-
+# 9.5 SERIAL CORRELATION AND VARIANCE HOMOGENEITY ----------------------------------------------------------------
 
 
 
