@@ -1576,6 +1576,49 @@ anova(mGausNuggetLinML,mGausNuggetML)
 # Vi kan ikke afvise hypotesen, hvorfor det giver mening at reducere den yderligere
 
 # 9.5.4 MODEL VALIDATION ------------------------------------------------------------------------------------------
+# Vi kikker på variance homogenitet og corroelations strukturen
+
+plot(mGausNugget)
+
+# vi kan også tilføje lidt farve:
+
+plot(mGausNugget, col=factor(long.g$time)) # Farver i tids katagorier
+plot(mGausNugget, col=long.g$feed) # Farver i foder katagorier
+plot(mGausNugget, col=long.g$goat) # Farver i ged (...) katagorier
+
+# Ser vi på plottet med farvet tids katagorier kan vi notere os at
+# variationen er lidt større for dag 91 (blå), 
+# hvilket stemmer overens med tidligere resultater.
+
+plot(mGausNugget$fitted[,2],mGausNugget$residuals[,2]) #Kan også det her uden helt at vide hvorfor...
+
+# CORRELATION PLOT:
+# Det bliver lidt lang håret, men se evt. s. 116-117 for en ok forklaring.
+
+# Vi sammenligner med vores empiriske observationer vedrørende correlation fra 'lmFit'
+
+corFctGauseNugget <- function(h){
+     (0.1598+0.0603*exp(-(h/36.31)^2))/
+     (0.1598+0.0603+0.0313)}
+# Estimere corr. funktionen (...)
+
+plot(timeDist, corVec, xlim = c(0,100), # Noteŕ dig at kommandoen 'timeMax' ikke findes..
+     ylim = c(0.6,1), ylab = "correlation")
+# The points (...)
+
+plot(corFctGauseNugget, 0, 100,
+     add=T, col=2)
+# Corr fkt. i rød
+# Det ser fint ud - men der var også meget tryl i første kommando..
+
+# 9.5.5 COMPARISON OF DIFFERENT CORRELATIONS STRUKTURES ---------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
