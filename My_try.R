@@ -1548,3 +1548,18 @@ mExpNoRi <- gls(weight~w0+factor(feed)*factor(time), # Notér dig 'gls' frem for
                  data=long.g)
 
 
+# 9.5.2 EXTRACTING THE ESTIMATES -----------------------------------------------------------------------
+
+# Vi ser på moddelerne:
+
+summary(mGausNugget)
+# Se en nogenlunde forklaring på s. 113
+
+getVarCov(mGausNugget, individuals = 1, type = "marginal")
+# Igen; se bog - s. 113-114
+
+# 9.5.3 HYPOTHESIS TEST IN FIXED PART OF THE MODEL ------------------------------------------------------
+
+
+
+
