@@ -1560,6 +1560,35 @@ getVarCov(mGausNugget, individuals = 1, type = "marginal")
 
 # 9.5.3 HYPOTHESIS TEST IN FIXED PART OF THE MODEL ------------------------------------------------------
 
+# ligesom tidligere; vi fitter med 'ML' og tester i ANOVA:
+
+mGausNuggetML <- lme(weight~w0+factor(feed)*factor(time), # time som factor
+                     random =~ 1|goat,
+                     corr=corGaus(form = ~time|goat, nugget = T),
+                     data = long.g, method = "ML")
+
+mGausNuggetLinML <- lme(weight~w0+factor(feed)*time, # tid som mnumerisk
+                        random =~ 1|goat,
+                        corr=corGaus(form = ~time|goat, nugget = T),
+                        data = long.g, method = "ML")
+
+anova(mGausNuggetLinML,mGausNuggetML)
+# Vi kan ikke afvise hypotesen, hvorfor det giver mening at reducere den yderligere
+
+# 9.5.4 MODEL VALIDATION ------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
