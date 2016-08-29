@@ -1437,7 +1437,70 @@ summary(mRanInt)
 
 # Lækkert, men tolkningen tho... feed1 er ref cet...
 
-# 9.4 INVESTIGATION OF F THE CORRELATION STUCTURE ----------------------------------------------------------------
+# 9.4 INVESTIGATION OF THE CORRELATION STUCTURE ----------------------------------------------------------------
+
+# Det her bliver lidt lang håret..
+# I 'random intercept models' (overstående) er det antaget at hver fodertype
+# har samme variance (correlation) på tværs af tid. Denne antagelse er sjældent rimlig.
+# Vi undersøger derfor variancen på tværs af tid manuelt:
+
+lmfit0 <- lm(weight~w0+factor(feed)*factor(time),data = long.g)
+
+# Vi har har her 'long' men skal bruge 'wide'. 
+# Vi kunne bruge 'reshape', men også gøre følgende:
+
+
+lmfit <- lm(data.matrix(goats[,4:7]) ~ goats$w0 + factor(goats$feed))
+
+lmfit
+
+# Objektet 'data.matrix(goats[,4:7]' skabe en matrix 28*4 som giver obs dagene som colm.
+# Når dette objekt køres gennem 'lm' skabes en lin. reg. for colm. (dag) af gangen.
+# Foskellie coef. fra forskellig dage findes. 
+# Disse korrospondere med interaktionen 'factor(feed)*factor(time)'
+# Forskellige coef. er tilladt for 'baseline' (intercept).
+# I dette tilfælde ser vi kun en meget lille forskel på tværs af dagene. (se evt. s 107)
+
+# Vi henter residualerne:
+
+lmFitRes <- residuals(lmfit)
+head(lmFitRes)
+
+# Følgende kommandoer udregner en 'variance-covariance' matrix
+# og den corresponderende corrolations matrix:
+
+var(lmFitRes) # Varianc-covariance matrix
+
+cor(lmFitRes) # Correlation matrix
+
+# Er i tvivl om hvorledes man skal tolke på 'var()',
+# Men 'cor()' er lige til. Vi ser her (diagonalt) at correlationen
+# Er rimlig konsistent for dagene w26,w45 og w61 (ca. 0.7-0.8)
+# Der i mod lægger w91 generelt lidt lavere (0.6-0.7)
+# Forskellen er stor nok til at bogen problematisere det (manglende variance homogenitet).
+# I section 9.6 ser vi på en model der tillader variance heterogenitet
+
+# Cor. matirxen viser også at correlationen generelt bliver mindre over tid.
+# Følgende plot illustrere:
+
+corMat <- cor(lmFitRes) # Correlation matrix
+corVec <- corMat[upper.tri(corMat)] # Vector med off-diagonale elementer (?)
+corVec
+
+timeDist <- c(45,61,61,91,91,91) - c(26,26,45,26,45,61)
+timeDist
+
+plot(timeDist, corVec) # 'plot(x,y)'
+# Lækker og overskueligt
+
+# Vi kan også et 'pairwise' scatterplot over residualerne:
+
+pairs(lmFitRes)
+# Fint. og kan også bruges til at identificere outliers.
+
+
+
+
 
 
 
