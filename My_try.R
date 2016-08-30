@@ -1622,12 +1622,61 @@ anova(mGausNugget,mGausNoNugget,mGausNoRi,mExpNugget,mExpNoNugget,mExpNoRi,mRanI
 # Samme konk. får vi hvis vi kikker på 'BIC' (Baysian Information Criterion).
 # p-værdierne skal man vist ikke (endnu) ligge for meget i.
 
-# 9.6 MODELS WITH VARIANCE INHOMOGENEITY
+# 9.6 MODELS WITH VARIANCE INHOMOGENEITY (heteroskedatisitet) -----------------------------------------------------
+# Vi kan bruge funktionen 'weights' til at tage højde for at foreskel i obs.
+
+# Diggel Model With Time-depending Variance:
+# Eks. så vi tidlige at variationen så ud til at være større for dag 91 end for resten.
+# Vi forlænger vores 'mGausNugget' model:
+
+mDiffVarGaus <- lme(weight~w0+factor(feed)*factor(time),
+                    random = ~1|goat,
+                    corr=corGaus(form = ~time|goat,nugget=T),
+                    weights = varIdent(form = ~1|time),
+                    data = long.g)
+
+mDiffVarGaus
+
+# Nu har residualets varians mulighed for at varierer mellem dage.
+# Som det ses nederest i outputtet er dag '26' ref. cat
+# Vi har nugget: 0.4387794 og parameter est: 1.0000
+# Så residualernes varians er 0.4387794^2 * 1
+# for dag 45, 61 og 91 er det så hendholdsvis:
+# 0.4387794^2 * 1.0780679, 0.4387794^2 * 0.9633398 og 0.4387794^2 * 0.1.5030405 
+# Som forventet er det dag 91 der slår ud.
+# Notér dig at 'nugget' effekten antages ens for alle dage.
 
 
+# Unrestricted Model With Time-depending Variance:
+# Alt. metode: tillader forskellig variance på forskellige tidspunkter osv. (se s.120)
+# Vi bruger her 'gls', hvorfor vi først omformer vores data 
+# således at dagene heder 1-4 istedet for 26,45,61,91:
 
+long.g1 <- transform(long.g, obsNo=as.numeric(factor(time)))
+head(long.g1)
 
+# Lækkert
 
+mDiffVarSymm <- gls(weight~w0+factor(feed)*factor(time),
+                    corr=corSymm(form = ~obsNo|goat),
+                    weights = varIdent(form = ~1|obsNo),
+                    data = long.g1)
+
+mDiffVarSymm
+
+# Vi kan træffe samme konk vedrørende dag 91.
+# Notér dig at 'within-goat correlation' findes under 'correlation structure'.
+
+# Vi undersøger vores moddeler med anova:
+
+anova(mGausNugget, mDiffVarGaus, mDiffVarSymm)
+
+# AIC og p-værdier tyder på at der ikke er nogen grund til at tage højde for heteroskedasticitet.
+
+# Unrestricted Models With Group-depending Variance.
+# Variantion kan variere mellem subjekter frem for eks. tidspunkter.
+
+# Eks.:
 
 
 
