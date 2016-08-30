@@ -6,7 +6,7 @@
 
 setwd("~/Dokumenter/data/Guide1data/data")
 
-#*********************************************** 1) Working with R *********************************************
+#*********************************************** 1) Working with R *****************************************----
 
 # 1.3 POTATO YIELD----------------------------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ print(z)
 
 
 
-#*********************************************** 2) Getting data in R *********************************************
+#*********************************************** 2) Getting data in R ****************************************----
 
 # 2.1 DATA VIA CLIPBOARD------------------------------------------------------------------------------------------
 
@@ -281,7 +281,7 @@ x[2:3,]
 
 
 
-#*********************************************** 4) Data Handling In R *********************************************
+#*********************************************** 4) Data Handling In R **************************************----
 
 # 3.1 HOW TO SELECT PART OF A DATAFRAME ---------------------------------------------------------------------------
 
@@ -372,10 +372,10 @@ potatoT
 
 
 #===============================================================================================================
-#                                         II - For Statistical Analysis
+#                                         II - For Statistical Analysis ----
 #===============================================================================================================
 
-#*************************************** 5) R Functions For Data Presentation ***********************************
+#*************************************** 5) R Functions For Data Presentation ******************************----
 
 load("milkyield.rda")
 str(milkyield)
@@ -459,7 +459,7 @@ qqnorm(potato$yield)
 # Kommandoen 'par()' skulle vist også være god....
 
 
-#5.2.1 THE PLOT FUNCTION ---------------------------------------------------------------------------------------------------
+#5.2.1 THE PLOT FUNCTION ---------------------------------------------------------------------------------------
 
 load("hydrolysis.rda")
 head(hydrolysis)
@@ -605,9 +605,9 @@ identify(hydro1$hour, hydro1$serine, labels = "patient")
 
 # Pakken 'lattic' skulle havde endnu mere sjov. 
 
-#*************************************** 6) Basic Statistical Functions ***********************************
+#*************************************** 6) Basic Statistical Functions ***********************************----
 
-# 6.1 THE NORMAL DISTRIBUTION --------------------------------------------------------------------
+# 6.1 THE NORMAL DISTRIBUTION ---------------------------------------------------------------------------------
 
 # Vi har nu x med 'mean' = 4200 og 'sd' = 420. 
 # vi undersøger nu sandsynligheden for at få værdien 4500 inde for denne fordeling:
@@ -788,7 +788,7 @@ dmultinom(c(70, 33, 6, 33), size = 142, prob = c(0.49, 0.23, 0.04, 0.23))
 
 # vI SPRINGE LIGE FRA S. 57 - 67 :)
 
-#*************************************** 7) Linear Normal Models ***********************************
+#*************************************** 7) Linear Normal Models ********************************************----
 
 # 7.1.1 ONE-WAY ANOVA ---------------------------------------------------------------------------------------------------
 # Har er alle x factore
@@ -867,7 +867,7 @@ summary(model1c)
 
 # Samme resultat.. Ved ikke hvad jeg lige synes er hottest..
 
-# 7.1.2 TWO-WAY ANOVA. MULTI-WAY ANOVA. ----------------------------------------------------------------------------------
+# 7.1.2 TWO-WAY ANOVA. MULTI-WAY ANOVA. -------------------------------------------------------------------------
 # Interaktion (!!)
 
 load("organic.rda")
@@ -929,7 +929,7 @@ interaction.plot(x.factor = organic$tim, trace.factor = organic$vet, response = 
 interaction.plot(x.factor = organic$vet, trace.factor = organic$tim, response = organic$matter)
 # See.Respons vil altid være den afhængige variable, men 'trace' og 'x' kan man jo se på.
 
-# 7.2.1 SIMEL LINEAR REGRESSION -------------------------------------------------------------------
+# 7.2.1 SIMEL LINEAR REGRESSION -------------------------------------------------------------------------------
 
 # Vi konsturer to variabler x(acid) og y(fat). 
 # (Noget med intagelse af fedt, og en bestemt slags syre..)
@@ -952,7 +952,7 @@ model2 <- lm(y~1)
 anova(model2, model1)
 # Kan godt lide ideen om at sammenligne modeller, men skal lige fatte det helt.
 
-# 7.2.2 MULTIPLE LINEAR REGRESSION -----------------------------------------------------------------------------------------
+# 7.2.2 MULTIPLE LINEAR REGRESSION ------------------------------------------------------------------------------
 
 # Vi indsætter flere x blot ved '+'. (eget) eks:
 
@@ -998,7 +998,7 @@ anova(model2,model3)
 summary(model3)
 # Her ser vi jo også at leddet som sig, om end mindre end d2.. nok om det.
 
-# 7.2.3 TEST FOR LINEARITY -----------------------------------------------------------------------------------------------
+# 7.2.3 TEST FOR LINEARITY -------------------------------------------------------------------------------------
 
 # VI bruger her datasættet 'hydrolysis':
 
@@ -1052,7 +1052,7 @@ summary(model3a)
 
 detach(hydrolysis)
 
-# 7.3 MODEL VALIDATION ------------------------------------------------------------------------------------------------
+# 7.3 MODEL VALIDATION -----------------------------------------------------------------------------------------
 
 load("hydrolysis.rda")
 attach(hydrolysis)
@@ -1068,7 +1068,7 @@ model3a <- lm(logserine~feed+hour-1) #Uden ref. cat.
 summary(model3)
 summary(model3a) # Bare for sjov og øvelse :)
 
-# 7.3.1 ANALYSIS OF RESIDUALS (Normalfordelte fejlled og Heteroskedasticitet)---------------------------------------------
+# 7.3.1 ANALYSIS OF RESIDUALS (Normalfordelte fejlled og Heteroskedasticitet)------------------------------------
 
 pred3 <- predict(model3) # Predicted values
 res3 <- residuals(model3) # Raw residuals
@@ -1088,7 +1088,7 @@ abline(a=0,b=1) # GIver dig en 45* linje at sammenligne med
 # Her ser alt godt ud; Residualerne falder fint omkring 0
 # Og i QQ-plottet ligger de fint på linjen
 
-# 7.3.2 TRANSFORMATION. BOX-COX ANALYSE -----------------------------------------------------------------------------------
+# 7.3.2 TRANSFORMATION. BOX-COX ANALYSE -------------------------------------------------------------------------
 
 # Antag nu at der var problemer med model specifiketionenerne.
 # Vi konstruere nu ne model hvor 'serine' ikke er log. trans:
@@ -1136,7 +1136,7 @@ boxcox(modelxy2)
 
 detach(hydrolysis)
 
-# 7.4 ESTIMATION OF CONTRAST -----------------------------------------------------------------------------------------------
+# 7.4 ESTIMATION OF CONTRAST -----------------------------------------------------------------------------------
 
 load("hydrolysis.rda")
 
@@ -1193,9 +1193,9 @@ estimable(model3a, est, conf.int = 0.95)
 # Er ikke sikker på hvad det her kan så vender tilbage til det når 
 # det bliver nødvedigt. dvs. springer s. 89 over..
 
-#*************************************** 8) Models With Random Effects ***********************************
+#*************************************** 8) Models With Random Effects ***********************************----
 
-# 8.2 ANALYSIS OF MIXED LINEAR MODELS (lme, lmer) --------------------------------------------------------------------------
+# 8.2 ANALYSIS OF MIXED LINEAR MODELS (lme, lmer) ------------------------------------------------------------
 
 # 8.2.1 Analysing a singel random factor
 
@@ -1261,7 +1261,7 @@ summary(model3)
 # Lækkert. Vi kan udføre de samme krumspring som ved lm,
 # dvs. relevel, estimable osv.
 
-# 8.2.2 TWO OR MORE RANDOM FACTORS ----------------------------------------------------------------------------------------
+# 8.2.2 TWO OR MORE RANDOM FACTORS -----------------------------------------------------------------------------
 
 # Vi bruger datafram 'vitE' (E vitamin i kød). Vi bruger kvadratroden af 'vitE' som respons (y). 
 # Ligeledes har vi var. 'lab' og 'sampel'. som skal være faktore:
@@ -1346,9 +1346,9 @@ summary(model2a)
 # Men det er i hverfald noget med at der ikke er nogle p-værdier så man må nøjes med t-dist.. se s. 100
 
 
-#****************************************** 9) Repeated Measurements ***********************************
+#****************************************** 9) Repeated Measurements ***********************************----
 
-# 9.1.1 WIDE FORM AND LONG FORM (Preliminaries) --------------------------------------------------------------------------
+# 9.1.1 WIDE FORM AND LONG FORM (Preliminaries) ----------------------------------------------------------------
 
 load("goats.rda")
 
@@ -1416,7 +1416,7 @@ for (i in 2:4) lines(obsTimes,avedata[,i],
                      col=i,
                      type = "b")          # Add feed type 2-4
                      
-# 9.2 ANALYSIS OF SUMMERY MEASURES ------------------------------------------------------------------------------
+# 9.2 ANALYSIS OF SUMMERY MEASURES -----------------------------------------------------------------------------
 
 # Vi kikker nu på vægt forøgelsen (incremental) fra day 26 til 91 og antager 'independent'.
 # Vi bruger 'lm' på 'wide' data'en
@@ -1426,7 +1426,7 @@ summary(mIncr)
 # Ref. cat. = treat 1. 
 # Og vi ser blandt andet at treat 4 giver en signifikant mindre vægtforøgning end trat.1
 
-# 9.3 THE RANDOM INTERCEPT MODEL --------------------------------------------------------------------------------
+# 9.3 THE RANDOM INTERCEPT MODEL -------------------------------------------------------------------------------
 # Vi sætter nu 'ged' som randomfactor (bruger lme) og laver interaktione mellem 'feed' og 'time'
 
 library(nlme)
@@ -1498,11 +1498,11 @@ plot(timeDist, corVec) # 'plot(x,y)'
 pairs(lmFitRes)
 # Fint. og kan også bruges til at identificere outliers.
 
-# 9.5 SERIAL CORRELATION AND VARIANCE HOMOGENEITY ----------------------------------------------------------------
+# 9.5 SERIAL CORRELATION AND VARIANCE HOMOGENEITY --------------------------------------------------------------
 
 # Se s. 110 for en forklaring herom + skema over mugligheder.
 
-# 9.5.1 FITTING MODELS WITH SERIAL CORRELATION STUCTURE ----------------------------------------------------------
+# 9.5.1 FITTING MODELS WITH SERIAL CORRELATION STUCTURE --------------------------------------------------------
 # Først 'the Diggel model' (mGausNugget).
 
 mGausNugget <- lme(weight~w0+factor(feed)*factor(time),
@@ -1548,7 +1548,7 @@ mExpNoRi <- gls(weight~w0+factor(feed)*factor(time), # Notér dig 'gls' frem for
                  data=long.g)
 
 
-# 9.5.2 EXTRACTING THE ESTIMATES -----------------------------------------------------------------------
+# 9.5.2 EXTRACTING THE ESTIMATES ------------------------------------------------------------------------------
 
 # Vi ser på moddelerne:
 
@@ -1558,7 +1558,7 @@ summary(mGausNugget)
 getVarCov(mGausNugget, individuals = 1, type = "marginal")
 # Igen; se bog - s. 113-114
 
-# 9.5.3 HYPOTHESIS TEST IN FIXED PART OF THE MODEL ------------------------------------------------------
+# 9.5.3 HYPOTHESIS TEST IN FIXED PART OF THE MODEL ------------------------------------------------------------
 
 # ligesom tidligere; vi fitter med 'ML' og tester i ANOVA:
 
@@ -1575,7 +1575,7 @@ mGausNuggetLinML <- lme(weight~w0+factor(feed)*time, # tid som mnumerisk
 anova(mGausNuggetLinML,mGausNuggetML)
 # Vi kan ikke afvise hypotesen, hvorfor det giver mening at reducere den yderligere
 
-# 9.5.4 MODEL VALIDATION ------------------------------------------------------------------------------------------
+# 9.5.4 MODEL VALIDATION ---------------------------------------------------------------------------------------
 # Vi kikker på variance homogenitet og corroelations strukturen
 
 plot(mGausNugget)
@@ -1611,7 +1611,7 @@ plot(corFctGauseNugget, 0, 100,
 # Corr fkt. i rød
 # Det ser fint ud - men der var også meget tryl i første kommando..
 
-# 9.5.5 COMPARISON OF DIFFERENT CORRELATIONS STRUKTURES ---------------------------------------------------------
+# 9.5.5 COMPARISON OF DIFFERENT CORRELATIONS STRUKTURES --------------------------------------------------------
 # Ofte sammenlignes forskellige modeller med 'AIC' (Akaike's Information Criterion)
 # ANOVA raportere 'AIC' såfremt vi indputter flere modeller:
 
@@ -1622,7 +1622,7 @@ anova(mGausNugget,mGausNoNugget,mGausNoRi,mExpNugget,mExpNoNugget,mExpNoRi,mRanI
 # Samme konk. får vi hvis vi kikker på 'BIC' (Baysian Information Criterion).
 # p-værdierne skal man vist ikke (endnu) ligge for meget i.
 
-# 9.6 MODELS WITH VARIANCE INHOMOGENEITY (heteroskedatisitet) ---------------------------------------------------
+# 9.6 MODELS WITH VARIANCE INHOMOGENEITY (heteroskedatisitet) --------------------------------------------------
 # Vi kan bruge funktionen 'weights' til at tage højde for at foreskel i obs.
 
 # Diggel Model With Time-depending Variance:
@@ -1794,14 +1794,37 @@ summary(m2)
 
 # Et hurtigt kik på 'AIC' viser at m1 er mest passende.
 
+# 9.7 MULTIPLE SERIES FOR EACH SUBJECT -------------------------------------------------------------------------
+# Det er noget med at der her er to slags korrelationer man her skal tage højde for
+# Correlationen indefor en (tids)serie og et subjekt subjekter
+# Og correlationen på tværs af mål/(tids)serier indefor et subjekt
 
+# Her kommer et eks, jeg måske ikke helt forstår:
 
+library(nlme)
+load("glucose.rda")
+head(glucose)
 
+glucose<-subset(glucose,infusion!="C") # Laver et eller andet subset i dataframet.
+long.gluc <- reshape(glucose,idvar = "series", 
+                     varying = list(7:18),times = 30*(1:12),
+                     v.names = "gluc", direction = "long")
 
+head(long.gluc) # Vi ser at tidsserien er gået fre 'wide' til 'long'
 
+# Nu mere tryl og jazz -> se s. 125-126 for forklaringe:
 
+mMultiSerGaus <- lme(gluc~factor(time)*infusion*group,
+                     random = ~1|subject/period,
+                     corr=corGaus(form = ~time|subject/period,
+                     nugget = T), data = long.gluc,
+                     subset=time>200)
 
+summary(mMultiSerGaus)
+# Og bla bla smart på s. 126-127
 
+#****************************************** 10) Generalized Linear Models *********************************----
+# 10.1 LOGISTIC REGRESSION ------------------------------------------------------------------------------------
 
 
 
