@@ -1622,7 +1622,7 @@ anova(mGausNugget,mGausNoNugget,mGausNoRi,mExpNugget,mExpNoNugget,mExpNoRi,mRanI
 # Samme konk. får vi hvis vi kikker på 'BIC' (Baysian Information Criterion).
 # p-værdierne skal man vist ikke (endnu) ligge for meget i.
 
-# 9.6 MODELS WITH VARIANCE INHOMOGENEITY (heteroskedatisitet) -----------------------------------------------------
+# 9.6 MODELS WITH VARIANCE INHOMOGENEITY (heteroskedatisitet) ---------------------------------------------------
 # Vi kan bruge funktionen 'weights' til at tage højde for at foreskel i obs.
 
 # Diggel Model With Time-depending Variance:
@@ -1677,7 +1677,122 @@ anova(mGausNugget, mDiffVarGaus, mDiffVarSymm)
 # Variantion kan variere mellem subjekter frem for eks. tidspunkter.
 
 # Eks.:
+# Homonet 'renin' blev målt 18 paienter + 6 kontrol under 7 forskellige udfordringer:
 
+load("renin.rda")
+
+# Udregner gennemsnit, sd,s og obs for hver kombinatione af tid og gruppe:
+
+avedata <- with(renin, tapply(l_renin, list(time,grp), mean))
+
+sddata <- with(renin, tapply(l_renin, list(time,grp), sd))
+
+n_data <- with(renin, tapply(l_renin, list(time,grp), length))
+
+# Langhåret; se s. 121-122..
+# Det handler om at du får en en fin graf med 95% conf. int. (hvorfor; 1,96)
+# 1:7 fordi der er 7 udfordringer/dage/obs
+# Først kontrol gruppen: aveData[,1], sddata[,1] og (n_data[,1])
+ 
+
+par(mfrow=c(1,2)) # ? Er det her jeg specificere at jeg vil havde to plots på samme side?
+
+plot(1:7,avedata[,1], xlim = c(0,8),ylim = c(2,6),
+     xlab = "Measurement times",ylab = "",type = "n")
+# Som vi kender den
+
+lines(1:7,avedata[,1] + 1.96*sddata[,1]/sqrt(n_data[,1])) # Linje for øvre konf. int.
+lines(1:7,avedata[,1] - 1.96*sddata[,1]/sqrt(n_data[,1])) # Linje for nedre konf. int.
+
+cord.x <- c(1:7,7:1)
+# Simpel da den blot fortæller hvor grafen starter og hvor den slutter.
+
+cord.y <- c(avedata[,1] -
+              1.96*sddata[,1]/sqrt(n_data[,1]),
+              avedata[7:1,1]+
+              1.96*sddata[7:1,1]/sqrt(n_data[7:1,1]))
+# Kompleks da denne fortæller om hele forløbet på grafen
+
+
+polygon(cord.x,cord.y,col = 'skyblue') 
+# En figur på baggrund af konstruerede kordinator.
+
+lines(1:7,avedata[,1],type = "b",pch=16) 
+# Giver den egentlige gennemsnits linje, aka; vores bedste bud.
+
+
+# ligeledes for patinent gruppen men nu med aveData[,2], sddata[,2] og (n_data[,2]):
+
+plot(1:7,avedata[,2], xlim = c(0,8),ylim = c(2,6),
+     xlab = "Measurement times",ylab = "",type = "n")
+
+lines(1:7,avedata[,2] + 1.96*sddata[,2]/sqrt(n_data[,2]))
+lines(1:7,avedata[,2] - 1.96*sddata[,2]/sqrt(n_data[,2]))
+
+cord.x <- c(1:7,7:1)
+cord.y <- c(avedata[,2] -
+              1.96*sddata[,2]/sqrt(n_data[,2]),
+            avedata[7:1,2]+
+              1.96*sddata[7:1,2]/sqrt(n_data[7:1,2]))
+
+polygon(cord.x,cord.y,col = 'skyblue')
+
+lines(1:7,avedata[,2],type = "b",pch=16)
+
+# Fuk det er smukt..
+# Jeg kunne også havde kørt på samme plot:
+
+plot(1:7,avedata[,2], xlim = c(0,8),ylim = c(2,6),
+     xlab = "Measurement times",ylab = "",type = "n")
+
+lines(1:7,avedata[,2] + 1.96*sddata[,2]/sqrt(n_data[,2]))
+lines(1:7,avedata[,2] - 1.96*sddata[,2]/sqrt(n_data[,2]))
+lines(1:7,avedata[,1] + 1.96*sddata[,1]/sqrt(n_data[,1]))
+lines(1:7,avedata[,1] - 1.96*sddata[,1]/sqrt(n_data[,1]))
+
+cord.xk <- c(1:7,7:1)
+cord.yk <- c(avedata[,1] -
+              1.96*sddata[,1]/sqrt(n_data[,1]),
+            avedata[7:1,1]+
+              1.96*sddata[7:1,1]/sqrt(n_data[7:1,1]))
+
+polygon(cord.xk,cord.yk,col = 'skyblue')
+
+lines(1:7,avedata[,1],type = "b",pch=16)
+
+cord.xp <- c(1:7,7:1)
+cord.yp <- c(avedata[,2] -
+              1.96*sddata[,2]/sqrt(n_data[,2]),
+            avedata[7:1,2]+
+              1.96*sddata[7:1,2]/sqrt(n_data[7:1,2]))
+
+polygon(cord.xp,cord.yp,col = 'brown')
+
+lines(1:7,avedata[,2],type = "b",pch=16)
+
+# Jep - det fandt du lige selv på ;)
+
+
+# Det ser ud til at mængden af homonet renin svinger mere i patient gruppen.
+# Dette kan der tages højde for med 'gls':
+
+m1 <- gls(l_renin~factor(grp)+factor(time),
+          weights = varIdent(form = ~1|grp),
+          corr = corSymm(form = ~time|id),
+          data = renin)
+
+summary(m1)
+# Denne model tillader ikke variation inde for grupperne
+# Se ellers s. 123-124 for en ok fortolkning:
+#Vi kan også lave en model der tillader variantion inde for grupperne:
+
+m2 <- gls(l_renin~factor(grp)+factor(time),
+          corr = corSymm(form = ~time|id),
+          data = renin)
+
+summary(m2)
+
+# Et hurtigt kik på 'AIC' viser at m1 er mest passende.
 
 
 
