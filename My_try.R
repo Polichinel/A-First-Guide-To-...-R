@@ -1888,6 +1888,8 @@ library(mfx)
 
 logitor(fit1,data = tickdata)
 # Meget lettere og finere -> nu med p-værdi
+logitmfx(fit1,data = tickdata)
+# TRYLLLLLLL! Marginale effekter -> her givet af katagorierne.
 
 # 10.1.2 CORRELATED DATA ---------------------------------------------------------------------------------------
 
@@ -1908,7 +1910,8 @@ exp(estimable(fit.cl, cm,conf.int=0.95))[,c(1,6,7)]
 # conf. int. er nu lidt bredere
 
 # Alt. mfx:
-logitor(fit.cl,data = tickdata)
+logitor(fit.cl,data = tickdata) # odds.ratio
+logitmfx(fit.cl,data = tickdata) # Marginale effekter -< giver sig selv ved kat var.
 # Multi lækkert
 
 # Alt. kan man også benytte tilgangen 'genealized estimating equation'(GEE)
@@ -1927,4 +1930,59 @@ summary(fit.gee)
 # De naive korrospondere ca med dem fra 'fit1' og de robuste ca med dem fra fit.cl
 
 # 10.1.3 NATURAL RESPONSE: CALCULATING IT YOURSELF! ---------------------------------------------------------
+
+# Nogen tæger dør naturligt under eksperimentet - det har R lidt svært ved.
+# Under stående er ikke desto mindre et forsøg på at i mødekomme denne præmis
+# (se s. 135-136 for jazz)
+
+dose <- c(0,10^6,10^7,10^8,10^9) # the data (?)
+numb <- c(60,30,60,60,60)
+numbd <- c(40,22,51,56,59)
+
+# og nu 'minus log-likelihood functionen':
+
+logl <- function(c,al,be) {
+  res=log(choose(numb[1],numbd[1]))+
+    numbd[1]*log(c)+(numb[1]-numbd[1])*log(1-c)
+                     for (i in 2:5) {
+                       p=c+(1-c)*exp(al+be*log10(dose[i]))/
+                         (1?exp(al+be*log10(dose[i])))
+                       res=res+
+                         log(choose(numb[i],numbd[i]))+
+                         numbd[i]+log(p)+(numb[i]-numbd[i])*log(1-p)
+                       
+}
+ return(-res)
+}
+
+# Virker det??
+# Vi henter pakken bbmle (mle2):
+
+library(bbmle)
+
+guess <- list(c=0.2,al=0,be=0) # Starting values
+opt <- mle2(logl,start=guess,method="Nelder-Mead")
+
+summary(opt)
+# Her sker ikke så meget, men debuggen vist sig fra sin fineste side.
+# Her for springer vi resten af det her afsnit over. se evt. s136-137.
+
+# 10.2 PROPORTIONAL ODDS MODEL -------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
