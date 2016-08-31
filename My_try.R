@@ -1871,13 +1871,60 @@ exp(confint(fit1))
 
 library(gmodels)
 
+cm <- rbind('6 vs 0 dose' = c(0,0,1,0,0,0),
+            '9 vs 8 dose'= c(0,0,0,0,-1,1),
+            '0i vs 0m'= c(0,-1,0,0,0,0))
+# pas.. Men det er vigtigt...
 
+exp(estimable(fit1,cm,conf.int = 0.95))[,c(1,6,7)]
+# virker fint og lækkert med både estimat (odds-r) og conf. iint,
+# men er lidt i tvivl om hvad der skete med cm...
 
+# Se en ok tolkning på s 133
 
+# Alt. kunne man bruge mfx-pakken
 
+library(mfx)
 
+logitor(fit1,data = tickdata)
+# Meget lettere og finere -> nu med p-værdi
 
+# 10.1.2 CORRELATED DATA ---------------------------------------------------------------------------------------
 
+# Grundet det eksperimentielle design - 10 tæger pr bur -
+# kan der være andet variantion end den dosis og art kan forklare
+# Dette kan vi tage højde for med funktionen 'quasibinomial'
 
+fit.cl <- glm(cbind(surv,dead)~factor(specie)+factor(dose), data = tickdata, quasibinomial)
+summary(fit.cl)
 
+# Coef. er de samme, men std.e og herved p er højere.
+# Her ændre det dog ikke meget ved konk.
+# Overdispantations parametre er 2.359031 og den nye std.e er netop fundet ved std.e*sqrt(2.359031)
+
+# Vi kan igen hente odds-ratio og konf. int.:
+
+exp(estimable(fit.cl, cm,conf.int=0.95))[,c(1,6,7)]
+# conf. int. er nu lidt bredere
+
+# Alt. mfx:
+logitor(fit.cl,data = tickdata)
+# Multi lækkert
+
+# Alt. kan man også benytte tilgangen 'genealized estimating equation'(GEE)
+
+library(gee)
+
+fit.gee <- gee(Y~factor(speciel)+factor(dosel)
+               ,data = ticklong,
+               id=experiment,
+               family = binomial,
+               corstr = "independence")
+
+summary(fit.gee)
+
+# Her får du nu både 'naive' og 'robuste' std.e
+# De naive korrospondere ca med dem fra 'fit1' og de robuste ca med dem fra fit.cl
+
+# 10.1.3 NATURAL RESPONSE: CALCULATING IT YOURSELF! ---------------------------------------------------------
 
