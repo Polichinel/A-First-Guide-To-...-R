@@ -1825,6 +1825,56 @@ summary(mMultiSerGaus)
 
 #****************************************** 10) Generalized Linear Models *********************************----
 # 10.1 LOGISTIC REGRESSION ------------------------------------------------------------------------------------
+# binary response. Dead or alive
+
+load("tickdata.rda")
+# Vi udsætter tæger for en svamp og ser hvor mange der overlever.
+# Hver eksperiment er et bur med 10 tæger af en given art, der så får en given mængde svamp
+
+# Vi laver to modeller; en med og en uden interaktion mellem dosis og art:
+
+fit0 <- glm(cbind(surv,dead)~factor(specie)*factor(dose),
+            data = tickdata,binomial)
+
+# Notér dig det fine trick med 'cind()'
+
+fit1 <- glm(cbind(surv,dead)~factor(specie)+factor(dose),
+            data = tickdata,binomial)
+
+anova(fit1,fit0, test = "Chisq") #Chisq = chi-squared dist.
+# Da p>0.05 (0.38) ser interaktionen ikke udtil at være sig.
+# VI bruger fit1
+
+summary(fit1)
+# Dosis og art ser ud til at havde sig. eff.
+# Vi sammenligner nu med en lang model - er konstrueret. (ved ikke helt hvorfor..)
+
+load("ticklong.rda")
+head(ticklong)
+
+fit1.long <- glm(Y~factor(speciel)+factor(dosel),data = ticklong,binomial)
+summary(fit1.long)
+# Vi for de samme resultater (men der er en forskel i AIC, DF og Deviance residuals??)
+
+# 10.1.1 ODDS-RATIO --------------------------------------------------------------------------------------------
+
+# 'glm' giver os log.odds og log.conf. 
+# for at får odds-ratio + conf. int. kan følgende gøres:
+
+exp(coef(fit1))
+# Her regner du bare fra log med exp - simpelt
+
+exp(confint(fit1))
+# Igen - omregner fra log med exp.
+
+# Man kan også specificere sine conf. int. med pakken gmodels:
+
+library(gmodels)
+
+
+
+
+
 
 
 
