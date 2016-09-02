@@ -1965,7 +1965,7 @@ opt <- mle2(logl,start=guess,method="Nelder-Mead")
 
 summary(opt)
 # Her sker ikke så meget, men debuggen vist sig fra sin fineste side.
-# Her for springer vi resten af det her afsnit over. se evt. s136-137.
+# Herfor springer vi resten af det her afsnit over. se evt. s136-137.
 
 # 10.2 PROPORTIONAL ODDS MODEL -------------------------------------------------------------------------------
 
