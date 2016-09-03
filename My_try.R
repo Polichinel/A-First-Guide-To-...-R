@@ -1968,10 +1968,20 @@ summary(opt)
 # Herfor springer vi resten af det her afsnit over. se evt. s136-137.
 
 # 10.2 PROPORTIONAL ODDS MODEL -------------------------------------------------------------------------------
+# Vi kikker nu på en evt. sammenhæng mellem kyllingers ben prblemer og deres foder rutiner:
+# Vi bruger en pakke 'VGAM' for at fitte en 'proportional odds' model (se. s 137-138)
 
 
+load("gaitdata.rda")
+library(VGAM)
 
+# Pakken findes ikke ....
 
+# 10.3 PISSION REGRESSION ------------------------------------------------------------------------------------
+
+# NOTE: HER HOPPER JEG MIDLERTIDIGT OVER TIL NOGET ANDET MATRIALE
+# Og før dette dette kapitel begyndes skal du desuden tilbage og læse det du mangler.
+# Til vi ses igen :) 
 
 
 
